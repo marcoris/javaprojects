@@ -3,25 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui;
+package root;
 
-import root.*;
+import gui.*;
 
 /**
  *
  * @author mctes
  */
-public class Feld extends javax.swing.JButton {
-    private Brett brett;
-    private Stein stein = null;
+public abstract class Stein {
+    private Feld feld;
     private boolean istSchwarz;
     
-    public Feld(Brett brett, boolean schwarz) {
-        this.brett = brett;
+    public Stein(Feld feld, boolean schwarz) {
+        this.feld = feld;
         istSchwarz = schwarz;
-    }
-    
-    public void setStein(Stein stein) {
-        this.stein = stein;
     }
 }

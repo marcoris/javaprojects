@@ -6,6 +6,7 @@
 package gui;
 
 import java.awt.Color;
+import root.*;
 
 /**
  *
@@ -28,6 +29,19 @@ public class Brett extends javax.swing.JFrame {
                 Feld f = new Feld(this, schwarz);
                 feld[z][sp] = f;
                 f.setBackground(schwarz ? Color.darkGray : Color.lightGray);
+                
+                if (schwarz) {
+                    if (z <= 3) {
+                        f.setStein(new Einfach(f, false));
+                        f.setForeground(Color.white);
+                        f.setText("O");
+                    } else if (z >= 6) {
+                        f.setStein(new Einfach(f, true));
+                        f.setForeground(Color.black);
+                        f.setText("O");
+                    }
+                }
+                
                 jPanel1.add(f);
                 schwarz = !schwarz;
             }
