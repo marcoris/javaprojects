@@ -5,6 +5,8 @@
  */
 package gui;
 
+import java.awt.Color;
+
 /**
  *
  * @author mctes
@@ -19,12 +21,17 @@ public class Brett extends javax.swing.JFrame {
         
         getContentPane().removeAll();
         
+        boolean schwarz = true;
+        
         for (int z = 0; z < feld.length; z++) {
             for (int sp = 0; sp < feld[z].length; sp++) {
-                Feld f = new Feld(this);
+                Feld f = new Feld(this, schwarz);
                 feld[z][sp] = f;
+                f.setBackground(schwarz ? Color.darkGray : Color.lightGray);
                 jPanel1.add(f);
+                schwarz = !schwarz;
             }
+            schwarz = !schwarz;
         }
         
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);

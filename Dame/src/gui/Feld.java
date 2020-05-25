@@ -13,7 +13,8 @@ public class Feld extends javax.swing.JButton {
     private Brett brett;
     private boolean istSchwarz;
     
-    public Feld(Brett brett) {
+    public Feld(Brett brett, boolean schwarz) {
         this.brett = brett;
+        istSchwarz = schwarz;
     }
 }
