@@ -28,6 +28,7 @@ public class Brett extends javax.swing.JFrame {
             for (int sp = 0; sp < feld[z].length; sp++) {
                 Feld f = new Feld(this, schwarz);
                 feld[z][sp] = f;
+                f.addActionListener(fl);
                 f.setBackground(schwarz ? Color.darkGray : Color.lightGray);
                 
                 if (schwarz) {
@@ -112,4 +113,18 @@ public class Brett extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+
+    private class FeldListener implements java.awt.event.ActionListener {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            for (int z = 0; z < feld.length; z++) {
+                for (int sp = 0; sp < feld.length; sp++) {
+                    if (evt.getSource() == feld[z][sp]) {
+                        System.out.println("Feld " + z + ", " + sp + " geklickt");
+                    }
+                }
+            }
+        }
+    }
+    
+    FeldListener fl = new FeldListener();
 }
