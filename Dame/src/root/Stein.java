@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package root;
 
 import gui.*;
@@ -18,5 +14,14 @@ public abstract class Stein {
     public Stein(Feld feld, boolean schwarz) {
         this.feld = feld;
         istSchwarz = schwarz;
+    }
+    
+    public void setFeld(Feld feld) {
+        this.feld = feld;
+        feld.getBrett().merkeEnde();
+    }
+    
+    public boolean getSchwarz() {
+        return istSchwarz;
     }
 }
