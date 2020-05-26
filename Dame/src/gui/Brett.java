@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gui;
 
 import java.awt.Color;
@@ -13,6 +9,8 @@ import root.*;
  * @author mctes
  */
 public class Brett extends javax.swing.JFrame {
+    
+    private boolean istZugbeginn = true;
 
     /**
      * Creates new form Brett
@@ -34,12 +32,8 @@ public class Brett extends javax.swing.JFrame {
                 if (schwarz) {
                     if (z <= 3) {
                         f.setStein(new Einfach(f, false));
-                        f.setForeground(Color.white);
-                        f.setText("O");
                     } else if (z >= 6) {
                         f.setStein(new Einfach(f, true));
-                        f.setForeground(Color.black);
-                        f.setText("O");
                     }
                 }
                 
@@ -51,6 +45,18 @@ public class Brett extends javax.swing.JFrame {
         
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
         pack();
+    }
+    
+    public boolean getZugbeginn() {
+        return istZugbeginn;
+    }
+    
+    public void merkeBeginn() {
+        istZugbeginn = false;
+    }
+    
+    public void merkeEnde() {
+        istZugbeginn = true;
     }
 
     /**
@@ -115,13 +121,26 @@ public class Brett extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private class FeldListener implements java.awt.event.ActionListener {
+        
+        Stein st = null;
+
         public void actionPerformed(java.awt.event.ActionEvent evt) {
+            Feld f = null;
             for (int z = 0; z < feld.length; z++) {
                 for (int sp = 0; sp < feld.length; sp++) {
                     if (evt.getSource() == feld[z][sp]) {
                         System.out.println("Feld " + z + ", " + sp + " geklickt");
+                        f = feld[z][sp];
+                        break;
                     }
                 }
+            }
+            
+            if (getZugbeginn()) {
+                st = f.getStein();
+                f.wegStein();
+            } else {
+                f.setStein(st);
             }
         }
     }
