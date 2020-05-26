@@ -5,6 +5,7 @@
  */
 package gui;
 
+import java.awt.Color;
 import root.*;
 
 /**
@@ -23,5 +24,22 @@ public class Feld extends javax.swing.JButton {
     
     public void setStein(Stein stein) {
         this.stein = stein;
+        stein.setFeld(this);
+        setForeground(stein.getSchwarz() ? Color.black : Color.white);
+        setText("O");
+    }
+    
+    public Brett getBrett() {
+        return brett;
+    }
+    
+    public Stein getStein() {
+        return stein;
+    }
+    
+    public void wegStein() {
+        stein = null;
+        brett.merkeBeginn();
+        setText("");
     }
 }
