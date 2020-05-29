@@ -18,10 +18,18 @@ public abstract class Stein {
     
     public void setFeld(Feld feld) {
         this.feld = feld;
-        feld.getBrett().merkeEnde();
+        feld.getBrett().merkeEnde(this);
     }
     
     public boolean getSchwarz() {
         return istSchwarz;
     }
+    
+    public Feld getFeld() {
+        return feld;
+    }
+    
+    abstract public boolean istOk(Feld feld);
+    
+    abstract public String getSymbol();
 }

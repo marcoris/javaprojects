@@ -11,6 +11,15 @@ import root.*;
 public class Brett extends javax.swing.JFrame {
     
     private boolean istZugbeginn = true;
+    
+    /*
+    * weiss:   1 00000001
+    * schwarz: 2 00000010
+    * beide:   3 00000011
+    */
+    private final int amZugWEISS = 1;
+    private final int amZugSCHWARZ = 2;
+    private int amZug = amZugWEISS;
 
     /**
      * Creates new form Brett
@@ -24,16 +33,16 @@ public class Brett extends javax.swing.JFrame {
         
         for (int z = 0; z < feld.length; z++) {
             for (int sp = 0; sp < feld[z].length; sp++) {
-                Feld f = new Feld(this, schwarz);
+                Feld f = new Feld(this, schwarz, z, sp);
                 feld[z][sp] = f;
                 f.addActionListener(fl);
                 f.setBackground(schwarz ? Color.darkGray : Color.lightGray);
                 
                 if (schwarz) {
                     if (z <= 3) {
-                        f.setStein(new Einfach(f, false));
+                        f.setStein(new Einfach(f, false), true);
                     } else if (z >= 6) {
-                        f.setStein(new Einfach(f, true));
+                        f.setStein(new Einfach(f, true), true);
                     }
                 }
                 
@@ -55,8 +64,69 @@ public class Brett extends javax.swing.JFrame {
         istZugbeginn = false;
     }
     
-    public void merkeEnde() {
+    public void merkeEnde(Stein stein) {
+        if (stein.getClass().getCanonicalName().equals("root.Einfach")) {
+            amZug = stein.getSchwarz() ? amZugWEISS : amZugSCHWARZ;
+        }
         istZugbeginn = true;
+    }
+    
+    public boolean istOk(Stein stein, Feld ziel) {
+        // Zielfeld besetzt
+        if (ziel.getStein() != null) {
+            return false;
+        }
+        
+        // Zug länger als 1 Feld
+        int x1 = stein.getFeld().getSpalte();
+        int x2 = ziel.getSpalte();
+        int y1 = stein.getFeld().getZeile();
+        int y2 = ziel.getZeile();
+        
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+        
+        if (Math.abs(dx) > 1) {
+            int dx1 = dx > 0 ? 1 : -1;
+            int dy1 = dy > 0 ? 1 : -1;
+            
+            // letztes Feld:
+            Feld fletzt = feld[y2 - dy1][x2 - dx1];
+            Stein stletzt = fletzt.getStein();
+            
+            if (stletzt != null) {
+                // Stein eigener Farbe
+                if (stletzt.getSchwarz() == stein.getSchwarz()) {
+                    return false;
+                }
+            }
+            
+            // Einfacher Stein: leer
+            if (stein.getClass().getCanonicalName().equals("root.Einfach") &&
+                stletzt == null) {
+                return false;
+            }
+            
+            // Zug länger als 2 Felder
+            if (Math.abs(dx) > 2) {
+                int z = y1 + dy1;
+                int sp = x1 + dx1;
+                // Erstes bis Votletztes Feld:
+                for (int i = 0; i < Math.abs(dx) - 2; i++) { 
+                    // Feld besetzt
+                    if (feld[z][sp].getStein() != null) {
+                        return false;
+                    }
+
+                    z += dy1;
+                    sp += dx1;
+                }
+            }
+            
+            fletzt.wegStein();
+        }
+        
+        return true;
     }
 
     /**
@@ -129,18 +199,28 @@ public class Brett extends javax.swing.JFrame {
             for (int z = 0; z < feld.length; z++) {
                 for (int sp = 0; sp < feld.length; sp++) {
                     if (evt.getSource() == feld[z][sp]) {
-                        System.out.println("Feld " + z + ", " + sp + " geklickt");
+                        System.out.println("Zeile: " + z + " Spalte: " + sp + " geklickt");
                         f = feld[z][sp];
                         break;
                     }
                 }
             }
             
+            int amZugMem = amZug;
             if (getZugbeginn()) {
-                st = f.getStein();
-                f.wegStein();
-            } else {
+                if ((st = f.getStein()) != null) {
+                    if (st.getSchwarz() && ((amZug & amZugSCHWARZ) != 0) ||
+                        !st.getSchwarz() && ((amZug & amZugWEISS) != 0)) {
+                        f.wegStein();
+                    }
+                }
+            } else if (st.istOk(f) &&
+                        istOk(st, f)
+            ) {
                 f.setStein(st);
+            } else {
+                st.getFeld().setStein(st);
+                amZug = amZugMem;
             }
         }
     }
