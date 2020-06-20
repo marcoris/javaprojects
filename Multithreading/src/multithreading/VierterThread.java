@@ -9,7 +9,7 @@ public class VierterThread extends Thread {
         while(true) {
             System.out.println(c.erg);
             
-            if (c.erg > 1000) {
+            if (c.erg > 10000) {
                 c.interrupt();
                 break;
             }
